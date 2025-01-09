@@ -28,6 +28,8 @@ interface FormData {
 }
 
 export function SubmitPitchPage() {
+  const STAGE_OPTIONS = ["IDEA", "MVP", "BETA", "LAUNCHED"] as const;
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     tagline: "",
@@ -52,7 +54,9 @@ export function SubmitPitchPage() {
     alert("Your pitch has been submitted for review!");
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -62,7 +66,6 @@ export function SubmitPitchPage() {
       {/* Hero Section */}
       <div className="relative mb-8 p-8 rounded-2xl bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/0 to-black/20 backdrop-blur-sm" />
         <div className="relative flex items-center gap-6">
           <div className="p-3 rounded-xl bg-white/10 backdrop-blur-md shadow-xl border border-white/20">
             <DocumentIcon className="w-6 h-6 text-white" />
@@ -192,15 +195,32 @@ export function SubmitPitchPage() {
                 required
                 className="focus:ring-2 focus:ring-primary-500"
               />
-              <Input
-                label="Stage"
-                name="stage"
-                value={formData.stage}
-                onChange={handleChange}
-                helperText="IDEA, MVP, BETA, or LAUNCHED"
-                required
-                className="focus:ring-2 focus:ring-primary-500"
-              />
+              <div className="space-y-1">
+                <label
+                  htmlFor="stage"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Stage
+                </label>
+                <select
+                  id="stage"
+                  name="stage"
+                  value={formData.stage}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500 sm:text-sm"
+                >
+                  <option value="">Select a stage</option>
+                  {STAGE_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-sm text-gray-500">
+                  Current development stage
+                </p>
+              </div>
             </div>
             <Input
               label="Website"

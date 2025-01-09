@@ -26,6 +26,21 @@ const getGradientForStartup = (id: string) => {
   return gradients[hash % gradients.length];
 };
 
+const getStageStyles = (stage: FilterOption) => {
+  switch (stage) {
+    case "IDEA":
+      return "bg-blue-100 text-blue-800";
+    case "MVP":
+      return "bg-purple-100 text-purple-800";
+    case "BETA":
+      return "bg-amber-100 text-amber-800";
+    case "LAUNCHED":
+      return "bg-emerald-100 text-emerald-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
 const getNextFriday = () => {
   const today = new Date();
   const day = today.getDay();
@@ -115,7 +130,7 @@ export function StartupList({ startups, onVote }: StartupListProps) {
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as FilterOption)}
-              className="rounded-full px-4 py-1.5 text-sm bg-white border border-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="rounded-full px-4 pr-8 py-1.5 text-sm bg-white border border-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent appearance-none"
             >
               <option value="all">All Stages</option>
               <option value="IDEA">Idea Stage</option>
@@ -126,7 +141,7 @@ export function StartupList({ startups, onVote }: StartupListProps) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="rounded-full px-4 py-1.5 text-sm bg-white border border-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="rounded-full px-4 pr-8 py-1.5 text-sm bg-white border border-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent appearance-none"
             >
               <option value="votes">Most Popular</option>
               <option value="newest">Newest First</option>
@@ -186,7 +201,11 @@ export function StartupList({ startups, onVote }: StartupListProps) {
                       </div>
                     </div>
                     <div className="flex items-center space-x-1.5">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStageStyles(
+                          startup.stage as FilterOption
+                        )}`}
+                      >
                         {startup.stage}
                       </span>
                     </div>
