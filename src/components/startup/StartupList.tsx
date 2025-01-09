@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Dialog } from "@headlessui/react";
 import { Startup } from "../../types";
+import { useLivePitch } from "../../contexts/LivePitchContext";
 
 interface StartupListProps {
   startups: Startup[];
@@ -69,6 +70,7 @@ export function StartupList({ startups, onVote }: StartupListProps) {
   const [sortBy, setSortBy] = useState<SortOption>("votes");
   const [filterBy, setFilterBy] = useState<FilterOption>("all");
   const loadingRef = useRef<HTMLDivElement>(null);
+  const { isLive } = useLivePitch();
 
   // Filter and sort startups
   const filteredAndSortedStartups = [...startups]
@@ -152,7 +154,12 @@ export function StartupList({ startups, onVote }: StartupListProps) {
       </div>
 
       {/* Startup List */}
-      <div className="max-w-5xl mx-auto space-y-2">
+      <div
+        className="max-w-5xl mx-auto space-y-2 relative"
+        style={{
+          height: `${displayedStartups.length * (76 + 8)}px`,
+        }}
+      >
         {displayedStartups.map((startup, index) => (
           <>
             <div
@@ -163,15 +170,41 @@ export function StartupList({ startups, onVote }: StartupListProps) {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  onVote(startup.id);
+                  if (!isLive) {
+                    onVote(startup.id);
+                  }
                 }}
-                className="relative flex flex-col items-center justify-center w-12 h-12 rounded-xl bg-gray-50 hover:bg-primary-50 transition-colors group-hover:ring-2 ring-primary-100"
+                disabled={isLive}
+                className={`relative flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-colors ${
+                  isLive
+                    ? "bg-gray-100 cursor-not-allowed"
+                    : "bg-gray-50 hover:bg-primary-50 group-hover:ring-2 ring-primary-100"
+                }`}
+                title={
+                  isLive
+                    ? "Voting is disabled during live events"
+                    : "Vote for this startup"
+                }
               >
-                <ArrowUpIcon className="w-5 h-5 text-gray-400 group-hover:text-primary-500 transition-colors" />
-                <span className="text-xs font-medium text-gray-700 group-hover:text-primary-600">
+                <ArrowUpIcon
+                  className={`w-5 h-5 ${
+                    isLive
+                      ? "text-gray-300"
+                      : "text-gray-400 group-hover:text-primary-500"
+                  } transition-colors`}
+                />
+                <span
+                  className={`text-xs font-medium ${
+                    isLive
+                      ? "text-gray-400"
+                      : "text-gray-700 group-hover:text-primary-600"
+                  }`}
+                >
                   {startup.votes}
                 </span>
-                <div className="absolute inset-0 rounded-xl bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                {!isLive && (
+                  <div className="absolute inset-0 rounded-xl bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                )}
               </button>
 
               {/* Startup Info */}
@@ -192,9 +225,20 @@ export function StartupList({ startups, onVote }: StartupListProps) {
                         />
                       </div>
                       <div>
-                        <h3 className="text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-                          {startup.name}
-                        </h3>
+                        <div className="flex items-center space-x-2">
+                          <h3 className="text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                            {startup.name}
+                          </h3>
+                          {isLive && index < 5 && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                              <span className="relative flex h-2 w-2 mr-1">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                              </span>
+                              Live
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-gray-500 mt-0.5 line-clamp-1">
                           {startup.tagline}
                         </p>
@@ -394,15 +438,17 @@ export function StartupList({ startups, onVote }: StartupListProps) {
                           </div>
                           <div className="p-4 rounded-xl bg-accent-50">
                             <p className="text-sm text-accent-600 mb-1">
-                              Min Investment
+                              Valuation
                             </p>
                             <p className="text-xl font-semibold text-accent-900">
                               {new Intl.NumberFormat("en-US", {
                                 style: "currency",
                                 currency: "USD",
                                 notation: "compact",
+                                maximumFractionDigits: 2,
                               }).format(
-                                selectedStartup.fundraising.minInvestment
+                                selectedStartup.fundraising.targetAmount *
+                                  selectedStartup.fundraising.equity
                               )}
                             </p>
                           </div>

@@ -207,25 +207,31 @@ function DiscoverPage({ startups }: { startups: typeof mockStartups }) {
         <h1 className="text-4xl md:text-5xl md:leading-normal font-display font-bold text-gradient animate-gradient">
           Invest in the Next Big Thing
         </h1>
-        <p className="text-xl text-gray-600 mx-auto">
-          Vote for your favorite startup to invest in them live on{" "}
-          <span className="inline-flex items-center font-medium">
-            <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-              {(() => {
-                const date = getNextFriday();
-                const day = date.getDate();
-                return date
-                  .toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                  })
-                  .replace(/\d+/, `${day}${getOrdinalSuffix(day)}`);
-              })()}
+        {!isLive ? (
+          <p className="text-xl text-gray-600 mx-auto">
+            Vote for your favorite startups to invest in them live on{" "}
+            <span className="inline-flex items-center font-medium">
+              <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+                {(() => {
+                  const date = getNextFriday();
+                  const day = date.getDate();
+                  return date
+                    .toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })
+                    .replace(/\d+/, `${day}${getOrdinalSuffix(day)}`);
+                })()}
+              </span>
             </span>
-          </span>
-          .
-        </p>
+            .
+          </p>
+        ) : (
+          <p className="text-xl text-gray-600 mx-auto">
+            Voting is closed during the live streamed pitch event.
+          </p>
+        )}
         {isLive && (
           <Link
             to="/live"
