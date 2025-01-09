@@ -445,10 +445,9 @@ export function StartupList({ startups, onVote }: StartupListProps) {
                                 style: "currency",
                                 currency: "USD",
                                 notation: "compact",
-                                maximumFractionDigits: 2,
                               }).format(
-                                selectedStartup.fundraising.targetAmount *
-                                  selectedStartup.fundraising.equity
+                                selectedStartup.fundraising.targetAmount /
+                                  (selectedStartup.fundraising.equity / 100)
                               )}
                             </p>
                           </div>
