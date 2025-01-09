@@ -3,9 +3,9 @@ import { Startup, User } from "../types";
 export const mockUsers: User[] = [
   {
     id: "1",
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+    name: "Jane Doe",
+    email: "jane@example.com",
+    avatar: "https://randomuser.me/api/portraits/women/8.jpg",
     investedAmount: 50000,
   },
 ];
@@ -69,12 +69,34 @@ function generateStartup(index: number): Startup {
     () => industries[Math.floor(Math.random() * industries.length)]
   );
 
-  const targetAmount = Math.floor(Math.random() * 9000000) + 1000000;
-  const equity = Math.floor(Math.random() * 15) + 5;
+  const amounts = [
+    25000, // 25k
+    50000, // 50k
+    75000, // 75k
+    100000, // 100k
+    125000, // 125k
+    150000, // 150k
+    175000, // 175k
+    200000, // 200k
+    250000, // 250k
+    300000, // 300k
+    400000, // 400k
+    500000, // 500k
+    600000, // 600k
+    750000, // 750k
+    1000000, // 1M
+  ];
+  const equityOptions = [5, 7.5, 10, 12.5, 15, 17.5, 20, 25];
+  const targetAmount = amounts[Math.floor(Math.random() * amounts.length)];
+  const equity =
+    equityOptions[Math.floor(Math.random() * equityOptions.length)];
+  const id = `startup-${index + 1}`;
+  const name = startupNames[index % startupNames.length];
 
   return {
-    id: `startup-${index + 1}`,
-    name: startupNames[index % startupNames.length],
+    id,
+    name,
+    imageUrl: `https://picsum.photos/seed/${id}/200`,
     tagline: `Revolutionizing ${randomIndustries[0]} with innovative solutions`,
     description: `We are building cutting-edge solutions in the ${
       randomIndustries[0]
@@ -91,9 +113,9 @@ function generateStartup(index: number): Startup {
       Math.floor(Math.random() * 28) + 1
     ).toISOString(),
     fundraising: {
-      targetAmount,
-      equity,
-      minInvestment: Math.floor(targetAmount * 0.01),
+      targetAmount: targetAmount,
+      equity: equity,
+      minInvestment: 0,
     },
     votes: Math.floor(Math.random() * 1000),
     pitchVideo: "https://example.com/video.mp4",

@@ -11,6 +11,7 @@ export interface Startup {
   name: string;
   tagline: string;
   description: string;
+  imageUrl: string;
   industry: string[];
   stage: "IDEA" | "MVP" | "BETA" | "LAUNCHED";
   founderName: string;

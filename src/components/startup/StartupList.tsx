@@ -166,13 +166,24 @@ export function StartupList({ startups, onVote }: StartupListProps) {
                   className="block w-full text-left"
                 >
                   <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-                        {startup.name}
-                      </h3>
-                      <p className="text-sm text-gray-500 mt-0.5 line-clamp-1">
-                        {startup.tagline}
-                      </p>
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0">
+                        <img
+                          src={
+                            startup.imageUrl || "https://via.placeholder.com/40"
+                          }
+                          alt={`${startup.name} logo`}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                          {startup.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-0.5 line-clamp-1">
+                          {startup.tagline}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-1.5">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
