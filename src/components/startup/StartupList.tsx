@@ -93,32 +93,15 @@ export function StartupList({ startups, onVote }: StartupListProps) {
 
   const displayedStartups = filteredAndSortedStartups.slice(0, displayCount);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const first = entries[0];
-        if (
-          first.isIntersecting &&
-          displayCount < filteredAndSortedStartups.length
-        ) {
-          setIsLoading(true);
-          setTimeout(() => {
-            setDisplayCount((prev) =>
-              Math.min(prev + ITEMS_PER_PAGE, filteredAndSortedStartups.length)
-            );
-            setIsLoading(false);
-          }, 800);
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    if (loadingRef.current) {
-      observer.observe(loadingRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [displayCount, filteredAndSortedStartups.length]);
+  const handleLoadMore = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setDisplayCount((prev) =>
+        Math.min(prev + ITEMS_PER_PAGE, filteredAndSortedStartups.length)
+      );
+      setIsLoading(false);
+    }, 800);
+  };
 
   return (
     <>
@@ -154,12 +137,7 @@ export function StartupList({ startups, onVote }: StartupListProps) {
       </div>
 
       {/* Startup List */}
-      <div
-        className="max-w-5xl mx-auto space-y-2 relative"
-        style={{
-          height: `${displayedStartups.length * (76 + 8)}px`,
-        }}
-      >
+      <div className="max-w-5xl mx-auto space-y-2">
         {displayedStartups.map((startup, index) => (
           <>
             <div
@@ -319,28 +297,33 @@ export function StartupList({ startups, onVote }: StartupListProps) {
 
         {/* Loading State */}
         {displayCount < filteredAndSortedStartups.length && (
-          <div
-            ref={loadingRef}
-            className="flex items-center justify-center py-8"
-          >
-            {isLoading ? (
-              <div className="flex items-center space-x-2">
-                <div
-                  className="w-2 h-2 rounded-full bg-primary-500 animate-bounce"
-                  style={{ animationDelay: "0ms" }}
-                />
-                <div
-                  className="w-2 h-2 rounded-full bg-primary-500 animate-bounce"
-                  style={{ animationDelay: "150ms" }}
-                />
-                <div
-                  className="w-2 h-2 rounded-full bg-primary-500 animate-bounce"
-                  style={{ animationDelay: "300ms" }}
-                />
-              </div>
-            ) : (
-              <span className="text-sm text-gray-500">Scroll to load more</span>
-            )}
+          <div className="flex items-center justify-center py-8">
+            <button
+              onClick={handleLoadMore}
+              disabled={isLoading}
+              className="px-6 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <div className="flex items-center space-x-2">
+                  <div
+                    className="w-2 h-2 rounded-full bg-primary-500 animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <div
+                    className="w-2 h-2 rounded-full bg-primary-500 animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <div
+                    className="w-2 h-2 rounded-full bg-primary-500 animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
+                </div>
+              ) : (
+                `Load More (${
+                  filteredAndSortedStartups.length - displayCount
+                } remaining)`
+              )}
+            </button>
           </div>
         )}
       </div>

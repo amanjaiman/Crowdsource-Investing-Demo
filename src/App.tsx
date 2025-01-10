@@ -60,13 +60,28 @@ function NavBar({ currentUser }: { currentUser: (typeof mockUsers)[0] }) {
               StartupLaunch
             </Link>
             <div className="hidden md:flex space-x-1">
-              <Link to="/" className="nav-link">
+              <Link
+                to="/"
+                className={`nav-link ${
+                  location.pathname === "/" ? "active" : ""
+                }`}
+              >
                 Discover
               </Link>
-              <Link to="/pitch" className="nav-link">
+              <Link
+                to="/pitch"
+                className={`nav-link ${
+                  location.pathname === "/pitch" ? "active" : ""
+                }`}
+              >
                 Submit Pitch
               </Link>
-              <Link to="/live" className="nav-link relative group">
+              <Link
+                to="/live"
+                className={`nav-link relative group ${
+                  location.pathname === "/live" ? "active" : ""
+                }`}
+              >
                 <span className="flex items-center">
                   Live Pitches
                   {isLive && !isLivePage && (
